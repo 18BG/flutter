@@ -37,6 +37,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   mysql_client: ^0.0.27
+  image_picker: ^0.8.7+1
+  provider: ^6.0.5
+  sqflite: ^2.2.6
+  path: ^1.8.2
 
 dev_dependencies:
   flutter_test:

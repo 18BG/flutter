@@ -1,8 +1,14 @@
 import 'package:an_app/Screens/main_screen/welcome.dart';
+import 'package:an_app/model/db_management/sqflite_management/sqflite_conn.dart';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const Entrie());
+  runApp(ChangeNotifierProvider(
+    create: (_) => Sqflite(),
+    child: const Entrie(),
+  ));
 }
 
 class Entrie extends StatelessWidget {
@@ -14,7 +20,7 @@ class Entrie extends StatelessWidget {
       title: 'Guide de l\'Etudiant',
       theme:
           ThemeData(brightness: Brightness.dark, primarySwatch: Colors.orange),
-      home: Welcome(),
+      home: const Welcome(),
     );
   }
 }

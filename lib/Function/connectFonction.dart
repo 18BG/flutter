@@ -1,79 +1,32 @@
-import 'package:an_app/model/mysql_conn.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+// ignore_for_file: file_names, avoid_print
 
-import '../Screens/Admin&Universitie/Universite/permission.dart';
+import 'dart:convert';
 
-class ConnecF extends StatefulWidget {
-  const ConnecF({super.key});
+import 'package:an_app/model/iniversities%20model/classe_universite.dart';
 
-  @override
-  State<ConnecF> createState() => _ConnecFState();
-}
+import '../model/db_management/mysql_management/rudOndb.dart';
 
-class _ConnecFState extends State<ConnecF> {
-  final formcle = GlobalKey<FormState>();
-  bool isLoading = false;
-  var base = Mysql();
-  TextEditingController username = TextEditingController(),
-      passwd = TextEditingController();
-  int v = 0;
-  @override
-  Widget build(BuildContext context) {
-    void login() {
-      if (formcle.currentState!.validate()) {
-        setState(() {
-          isLoading = true;
-        });
-        base.ConnectToDb().then((value) async {
-          final result = await value.execute(
-              'select username,count(*) as count from administrateur where username = :username and passwor = :passwor',
-              {"username": username.text, "passwor": passwd.text});
+class Fonction {
+  Future<void> getUniversiti(Universite faculte) async {
+    print("ppppppppppppppppppppppppp");
+    var result = await RUD().query(
+        "Select name , password,mail,logo from faculte where name = :name and password = :password",
+        {"name": faculte.name, "password": faculte.password});
+    for (var row in result!.rows) {
+      print("${row.assoc()['name']} , ${row.assoc()['mail']}");
+      String nam = row.assoc().values.toList()[0]!;
+      String pass = row.assoc().values.toList()[1]!;
+      String maile = row.assoc().values.toList()[2]!;
+      var imageprofil = row.assoc()['logo'] as String;
+      final decoded = base64Decode(imageprofil);
+      print(decoded);
 
-          for (var r in result.rows) {
-            setState(() {
-              v = int.parse(r.assoc().values.toList()[1].toString());
-            });
-            print("vvvvvvvvvvvvvvvvvvvvvvvvvvv ");
-            print(r.assoc().values.toList());
-          }
-          await Future.delayed(const Duration(seconds: 1));
-
-          if (v == 1) {
-            // _markPageAsLeft();
-
-            // ignore: use_build_context_synchronously
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                duration: Duration(seconds: 3),
-                content: Text("Connexion reussi !")));
-            // ignore: use_build_context_synchronously
-
-            username.clear();
-            passwd.clear();
-            // ignore: use_build_context_synchronously
-            Navigator.push(context,
-                MaterialPageRoute(builder: (BuildContext context) {
-              return const Permission();
-            }));
-
-            // ignore: use_build_context_synchronously
-            FocusScope.of(context).unfocus();
-          } else {
-            // ignore: use_build_context_synchronously
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("Nom d'utilisateur ou mot de passe incorrect")));
-          }
-          setState(() {
-            isLoading = false;
-          });
-        });
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Données invalid")));
-      }
+      faculte.name = nam;
+      faculte.mail = maile;
+      faculte.password = pass;
+      faculte.logo = decoded;
     }
-
-    return Container();
+    print(faculte.name);
+    print("finnnnnnnnnnnnnnnnnnnn");
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../model/db_management/mysql_management/updateDB.dart';
 import '../Admin&Universitie/Admin/admin_login.dart';
 
 class Welcome extends StatelessWidget {
@@ -54,6 +55,8 @@ class Welcome extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
+                    UpdateDB().updateProfil(
+                        "select nom from administrateur where id =1");
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const AdminLogin()),

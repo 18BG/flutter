@@ -1,9 +1,13 @@
+// ignore_for_file: avoid_print
+
 import 'package:an_app/model/admin_model/class_admin.dart';
 import 'package:an_app/model/iniversities%20model/classe_universite.dart';
 import 'package:flutter/material.dart';
-import 'package:mysql_client/mysql_client.dart';
 
-import '../mysql_conn.dart';
+import 'dart:convert';
+import 'dart:io';
+
+import 'mysql_conn.dart';
 
 class CreateOrUseDB {
   Future<void> insertInDbForAdmin(
@@ -35,6 +39,10 @@ class CreateOrUseDB {
 
   Future<void> insertInDbForFaculty(Universite univerisite,
       ScaffoldMessengerState scaffoldMessengerState) async {
+    File imgFile = File(univerisite.logo);
+    final imbyte = await imgFile.readAsBytes();
+    final encoded = base64Encode(imbyte);
+
     var base = Mysql();
     try {
       var conn = await base.ConnectToDb();
@@ -44,7 +52,7 @@ class CreateOrUseDB {
             "name": univerisite.name,
             "mail": univerisite.mail,
             "password": univerisite.password,
-            "logo": univerisite.logo
+            "logo": encoded
           });
     } catch (e) {
       print("Erreur lors de l'insertion dans la base de données : $e");

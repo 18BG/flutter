@@ -1,8 +1,10 @@
 import 'package:an_app/Screens/Admin&Universitie/Admin/TextFormFieldWidget.dart';
-import 'package:an_app/Screens/Admin&Universitie/Admin/login_body.dart';
+
 import 'package:an_app/Screens/Admin&Universitie/Universite/universitie_register.dart';
-import 'package:an_app/model/mysql_conn.dart';
+
 import 'package:flutter/material.dart';
+
+import '../../../model/db_management/mysql_management/mysql_conn.dart';
 
 class Permission extends StatefulWidget {
   const Permission({super.key});

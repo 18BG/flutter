@@ -3,7 +3,10 @@ class Universite {
   String name;
   String mail;
   String password;
-  String? logo;
-  Universite(this.logo,
-      {required this.name, required this.mail, required this.password});
+  var logo;
+  Universite(
+      {required this.name,
+      required this.mail,
+      required this.password,
+      required this.logo});
 }

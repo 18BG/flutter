@@ -1,10 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:an_app/Screens/Admin&Universitie/Admin/TextFormFieldWidget.dart';
-import 'package:an_app/Screens/Admin&Universitie/Universite/universitie_home.dart';
-import 'package:an_app/model/db_management/creatingDB.dart';
+import 'package:an_app/Screens/Admin&Universitie/Universite/universitie_login.dart';
+
 import 'package:an_app/model/iniversities%20model/classe_universite.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../../../model/db_management/mysql_management/rudOndb.dart';
 
 class UniversitieRegisterBody extends StatefulWidget {
   const UniversitieRegisterBody({super.key});
@@ -22,18 +26,65 @@ class _UniversitieRegisterBodyState extends State<UniversitieRegisterBody> {
       mail = TextEditingController(),
       password = TextEditingController(),
       password2 = TextEditingController();
-  Universite myUniversitie = Universite(null, name: "", mail: "", password: "");
+  Universite myUniversitie =
+      Universite(logo: "", name: "", mail: "", password: "");
   String? passwordConfirmation(String? value) {
     if (value != password.text || value != password2.text) {
       return "Les mots de passes ne sont pas conformes";
     } else if (value!.isEmpty) {
       return "Champs obligatoire";
     }
+    return null;
   }
 
   String? emptyCheck(String? value) {
     if (value!.isEmpty) {
       return "Champs obligatoire";
+    }
+    return null;
+  }
+
+  void register() async {
+    if (key.currentState!.validate()) {
+      key.currentState!.save();
+      myUniversitie.name = nom.text;
+      myUniversitie.mail = mail.text;
+      myUniversitie.password = password.text;
+      if (myUniversitie.logo == "") {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Le logo est obligatoire"),
+          duration: Duration(seconds: 3),
+        ));
+      } else {
+        try {
+          File imgFile = File(myUniversitie.logo);
+          final imbyte = await imgFile.readAsBytes();
+          final encoded = base64Encode(imbyte);
+
+          await RUD().insertQuery(
+              ScaffoldMessengerState(),
+              "INSERT INTO faculte (name,mail,password,logo) values (:name,:mail,:password,:logo)",
+              {
+                "name": myUniversitie.name,
+                "mail": myUniversitie.mail,
+                "password": myUniversitie.password,
+                "logo": encoded
+              });
+
+          print("faculte enregistrer avec succes");
+          nom.clear();
+          mail.clear();
+          password.clear();
+          // ignore: use_build_context_synchronously
+          Navigator.push(context,
+              MaterialPageRoute(builder: (BuildContext context) {
+            return const UniversitieLogin();
+          }));
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Erreur le nom de faculté existe déjà")));
+        }
+      }
     }
   }
 
@@ -62,10 +113,14 @@ class _UniversitieRegisterBodyState extends State<UniversitieRegisterBody> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            getImage(ImageSource.camera);
+                          },
                           icon: const Icon(Icons.camera_enhance)),
                       IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            getImage(ImageSource.gallery);
+                          },
                           icon: const Icon(Icons.photo_library))
                     ],
                   ),
@@ -109,36 +164,20 @@ class _UniversitieRegisterBodyState extends State<UniversitieRegisterBody> {
             margin: const EdgeInsets.all(15),
             height: 50,
             child: ElevatedButton(
-                onPressed: () async {
-                  if (key.currentState!.validate()) {
-                    key.currentState!.save();
-                    myUniversitie.name = nom.text;
-                    myUniversitie.mail = mail.text;
-                    myUniversitie.password = password.text;
-
-                    try {
-                      await CreateOrUseDB().insertInDbForFaculty(
-                          myUniversitie, ScaffoldMessengerState());
-                      print("faculte enregistrer avec succes");
-                      nom.clear();
-                      mail.clear();
-                      password.clear();
-                      // ignore: use_build_context_synchronously
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (BuildContext context) {
-                        return const UniversitHomePage();
-                      }));
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content:
-                              Text("Erreur le nom de faculté existe déjà")));
-                    }
-                  }
-                },
-                child: const Text("Soumettre")),
+                onPressed: register, child: const Text("Soumettre")),
           )
         ],
       ),
     );
+  }
+
+  Future getImage(ImageSource source) async {
+    var newImage = await ImagePicker().pickImage(source: source);
+    setState(() {
+      if (newImage!.path == null) {
+      } else {
+        myUniversitie.logo = newImage.path;
+      }
+    });
   }
 }

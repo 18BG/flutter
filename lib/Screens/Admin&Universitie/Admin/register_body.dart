@@ -1,8 +1,10 @@
 import 'package:an_app/Screens/Admin&Universitie/Admin/TextFormFieldWidget.dart';
 import 'package:an_app/Screens/Admin&Universitie/Admin/admin_login.dart';
 import 'package:an_app/model/admin_model/class_admin.dart';
-import 'package:an_app/model/db_management/creatingDB.dart';
+
 import 'package:flutter/material.dart';
+
+import '../../../model/db_management/mysql_management/rudOndb.dart';
 
 class AdminRegisterBody extends StatefulWidget {
   const AdminRegisterBody({super.key});
@@ -39,6 +41,63 @@ class _AdminRegisterBodyState extends State<AdminRegisterBody> {
 
   Admin admin =
       Admin(username: '', nom: '', prenom: '', mail: '', password: '');
+  //Admin register function
+  void register() async {
+    if (key.currentState!.validate()) {
+      key.currentState!.save();
+      setState(() {
+        isLoading = true;
+      });
+      admin.username = username.text.toString();
+
+      admin.nom = nom.text.toString();
+      admin.mail = mail.text.toString();
+      admin.prenom = prenom.text.toString();
+      admin.password = passwd.text.toString();
+      if (admin.nom != "" &&
+          admin.prenom != "" &&
+          admin.password != "" &&
+          admin.username != "") {
+        try {
+          await RUD().insertQuery(
+              ScaffoldMessengerState(),
+              "INSERT INTO administrateur (username,nom,prenom,mail,passwor) values (:username,:nom,:prenom,:mail,:passwor)",
+              {
+                "username": admin.username,
+                "nom": admin.nom,
+                "prenom": admin.prenom,
+                "mail": admin.mail,
+                "passwor": admin.password
+              });
+
+          print("Compte cree avec succes");
+          Future.delayed(const Duration(seconds: 3), () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (BuildContext context) {
+              return const AdminLogin();
+            }));
+          });
+          // ignore: use_build_context_synchronously
+          FocusScope.of(context).unfocus();
+        } catch (e) {
+          setState(() {
+            isLoading = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Erreur : le nom d'utilisateur existe déjà")));
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Assurrez d'avoir remplis tous les champs")));
+      }
+      // setState(() {
+      //   isLoading = false;
+      // });
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Ckeck your values")));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,60 +168,7 @@ class _AdminRegisterBodyState extends State<AdminRegisterBody> {
               ),
             ),
             ElevatedButton(
-                onPressed: isLoading
-                    ? null
-                    : () async {
-                        if (key.currentState!.validate()) {
-                          key.currentState!.save();
-                          setState(() {
-                            isLoading = true;
-                          });
-                          admin.username = username.text.toString();
-
-                          admin.nom = nom.text.toString();
-                          admin.mail = mail.text.toString();
-                          admin.prenom = prenom.text.toString();
-                          admin.password = passwd.text.toString();
-                          if (admin.nom != "" &&
-                              admin.prenom != "" &&
-                              admin.password != "" &&
-                              admin.username != "") {
-                            try {
-                              await CreateOrUseDB().insertInDbForAdmin(
-                                  admin, ScaffoldMessengerState());
-                              print("Compte cree avec succes");
-                              Future.delayed(const Duration(seconds: 3), () {
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                  return const AdminLogin();
-                                }));
-                              });
-                              // ignore: use_build_context_synchronously
-                              FocusScope.of(context).unfocus();
-                            } catch (e) {
-                              setState(() {
-                                isLoading = false;
-                              });
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          "Erreur : le nom d'utilisateur existe déjà")));
-                            }
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(
-                                        "Assurrez d'avoir remplis tous les champs")));
-                          }
-                          // setState(() {
-                          //   isLoading = false;
-                          // });
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text("Ckeck your values")));
-                        }
-                      },
+                onPressed: isLoading ? null : register,
                 child: isLoading
                     ? const CircularProgressIndicator()
                     : const Text("Créer un compte"))

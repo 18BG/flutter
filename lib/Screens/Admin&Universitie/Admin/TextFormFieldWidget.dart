@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class TextFormFields extends StatefulWidget {
   TextFormFields(
       {this.hide,
+      this.maxl,
       this.hint,
       this.onsave,
       this.suffix,
@@ -16,6 +17,7 @@ class TextFormFields extends StatefulWidget {
   TextEditingController? toChange;
 
   String? hint;
+  int? maxl;
   String? labelText;
   bool? suffix;
   bool? prefix;
@@ -37,6 +39,7 @@ class _TextFormFieldsState extends State<TextFormFields> {
     return TextFormField(
       controller: widget.toChange,
       obscureText: widget.hide!,
+      maxLines: (widget.maxl != null) ? widget.maxl : 1,
       validator: widget.f,
       onSaved: (newValue) {},
       decoration: InputDecoration(
