@@ -46,14 +46,6 @@ class _OptionManagementState extends State<OptionManagement> {
   bool isLoading = false;
 
   @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    fetchOption();
-    print(optionList.length);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -114,7 +106,7 @@ class _OptionManagementState extends State<OptionManagement> {
                 strokeWidth: 6,
               ),
             )
-          : OptionFetcher(widget.faculty, optionList: optionList),
+          : OptionFetcher(widget.faculty),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Add();

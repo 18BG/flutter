@@ -1,36 +1,36 @@
+import 'package:an_app/Screens/Admin&Universitie/Universite/filiere_list.dart';
 import 'package:an_app/model/db_management/sqflite_management/sqflite_conn.dart';
 import 'package:an_app/model/iniversities%20model/classe_universite.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../model/iniversities model/class_option.dart';
-import 'option_list.dart';
 
-class OptionFetcher extends StatefulWidget {
-  Universite fac;
+class FiliereFetcher extends StatefulWidget {
+  Option option;
 
-  OptionFetcher(
-    this.fac, {
+  FiliereFetcher(
+    this.option, {
     super.key,
   });
 
   @override
-  State<OptionFetcher> createState() => _OptionFetcherState();
+  State<FiliereFetcher> createState() => _FiliereFetcherState();
 }
 
-class _OptionFetcherState extends State<OptionFetcher> {
-  late Future _optionList;
+class _FiliereFetcherState extends State<FiliereFetcher> {
+  late Future _filiereList;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _optionList = _getOptList();
+    _filiereList = _getOfiliereList();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: _optionList,
+        future: _filiereList,
         builder: (_, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
@@ -38,7 +38,7 @@ class _OptionFetcherState extends State<OptionFetcher> {
                 child: Text(snapshot.error.toString()),
               );
             } else {
-              return const OptionList();
+              return FiliereList(opt: widget.option);
             }
           } else {
             return const Center(
@@ -48,8 +48,8 @@ class _OptionFetcherState extends State<OptionFetcher> {
         });
   }
 
-  Future _getOptList() async {
+  Future _getOfiliereList() async {
     final provider = Provider.of<Sqflite>(context, listen: false);
-    return provider.fetchOption(widget.fac.name);
+    return provider.fetchFiliere(widget.option.fac, widget.option.nom);
   }
 }
