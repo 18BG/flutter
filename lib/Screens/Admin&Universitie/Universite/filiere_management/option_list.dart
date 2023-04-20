@@ -51,7 +51,7 @@ class _OptionListState extends State<OptionList> {
         }
       }
 
-      print("list long");
+      print("nb Option");
       print(list.length);
 
       return (isDeleting)
@@ -180,21 +180,23 @@ class _OptionListState extends State<OptionList> {
                                                                                       var r = db.optionFetcher;
                                                                                     });
                                                                                   });
+                                                                                  print("updated into sqflite");
+                                                                                  print("Mise a jour dans mysql");
                                                                                 } catch (e) {
                                                                                   print("Errror : $e");
                                                                                 }
-                                                                                print("updated into sqflite");
-                                                                                print("Mise a jour dans mysql");
+
                                                                                 try {
                                                                                   await RUD().updateQuery(ScaffoldMessengerState(), "update Opt set nom = :nom where nom = :cnom and name = :name", {
                                                                                     "nom": nom.text,
                                                                                     "cnom": str,
                                                                                     "name": list[i].fac
                                                                                   });
+                                                                                  print("updated into mysql");
                                                                                 } catch (e) {
                                                                                   print("Erreur..l : $e");
                                                                                 }
-                                                                                print("updated into mysql");
+
                                                                                 Navigator.pop(context);
                                                                               }
 

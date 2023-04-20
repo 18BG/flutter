@@ -64,10 +64,9 @@ class _FiliereManageState extends State<FiliereManage> {
                               "option": widget.option.nom,
                               "fname": widget.option.fac
                             });
-                        print("reciperation begin");
+
                         for (var row in result!.rows) {
                           String nom = row.assoc().values.toList()[0]!;
-                          print(nom);
 
                           String comment = row.assoc().values.toList()[1]!;
 
@@ -76,8 +75,7 @@ class _FiliereManageState extends State<FiliereManage> {
                           String fname = row.assoc()['facName']!;
 
                           String option = row.assoc()['opt']!;
-                          print(option);
-                          print("recuperator 5");
+
                           filiere = Filiere(
                               nomfiliere: nom,
                               commentaire: comment,
@@ -87,8 +85,6 @@ class _FiliereManageState extends State<FiliereManage> {
                           print("jusque lq ça va");
                           //on ajoute chaque option pour la fac trouvé
                           if (filiere != null) {
-                            print(filiere.nomfiliere);
-
                             await Sqflite().addFiliere(filiere);
                             print("filiere enregistre");
 

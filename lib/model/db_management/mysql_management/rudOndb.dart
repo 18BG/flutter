@@ -5,7 +5,7 @@ import 'package:mysql_client/mysql_client.dart';
 
 import 'mysql_conn.dart';
 
-class RUD with ChangeNotifier {
+class RUD {
   var _queryResult;
   get queryResult => _queryResult;
   Mysql base = Mysql();
@@ -14,15 +14,12 @@ class RUD with ChangeNotifier {
       var conn = await base.ConnectToDb();
       var results = await conn.execute(sql, params);
 
-      for (var i in results.rows) {
-        print(i.assoc().values.toList()[0]);
-      }
       _queryResult = results;
-      notifyListeners();
+
       return _queryResult;
     } catch (e) {
       print("Erreur......$e");
-      notifyListeners();
+
       return null;
     }
   }
@@ -36,10 +33,8 @@ class RUD with ChangeNotifier {
       var results = await conn.execute(sql, params);
 
       print("iiiiiiiinnnnnssserted");
-      notifyListeners();
     } catch (e) {
-      print("Erreur......$e");
-      notifyListeners();
+      print("Erreur nnn......$e");
     }
   }
 
@@ -51,11 +46,9 @@ class RUD with ChangeNotifier {
       var conn = await base.ConnectToDb();
       await conn.execute(sql, params);
 
-      print("iiiiiiiinnnnnssserted");
-      notifyListeners();
+      print("updaaaaaaaaaaaaaaaaaaaaaated");
     } catch (e) {
-      print("Erreur......$e");
-      notifyListeners();
+      print(e);
     }
   }
 }

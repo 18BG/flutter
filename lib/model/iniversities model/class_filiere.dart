@@ -24,8 +24,8 @@ class Filiere {
   factory Filiere.fromString(Map<String, dynamic> value) => Filiere(
         nomfiliere: value['nomfiliere'],
         commentaire: value['commentaire'],
-        logo: ['logo'],
+        logo: value['logo'],
         facName: value['facName'],
-        option: value['option'],
+        option: value['opt'],
       );
 }

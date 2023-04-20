@@ -1,3 +1,4 @@
+import 'package:an_app/Screens/User/firstScreenrouter.dart';
 import 'package:flutter/material.dart';
 import '../../model/db_management/mysql_management/updateDB.dart';
 import '../Admin&Universitie/Admin/admin_login.dart';
@@ -63,27 +64,39 @@ class Welcome extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 15.0),
                     backgroundColor: Colors.teal,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
                   ),
-                  child: const Text("Administrateur"),
+                  child: const Text("Administrateur",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold)),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (BuildContext context) {
-                      return Container();
+                      return const UserScreenRouter();
                     }));
                   },
                   style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
                     backgroundColor: Colors.teal,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
                   ),
-                  child: const Text("Visiteur"),
+                  child: const Text(
+                    "Visiteur",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             )

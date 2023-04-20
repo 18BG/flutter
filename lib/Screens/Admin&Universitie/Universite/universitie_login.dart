@@ -1,4 +1,5 @@
 import 'package:an_app/Screens/Admin&Universitie/Universite/univLoginBody.dart';
+import 'package:an_app/Screens/main_screen/welcome.dart';
 import 'package:flutter/material.dart';
 
 class UniversitieLogin extends StatelessWidget {
@@ -22,10 +23,16 @@ class UniversitieLogin extends StatelessWidget {
                       children: [
                         TextButton(
                             onPressed: () {
-                              Navigator.pop(context);
-                              returnOrno = true;
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) => const Welcome()),
+                                  (route) => false);
+                              returnOrno = false;
                             },
-                            child: const Text("Annuler")),
+                            child: const Text(
+                              "Quitter",
+                              style: TextStyle(color: Colors.red),
+                            )),
                         TextButton(
                             onPressed: () {
                               Navigator.pop(context);
