@@ -176,6 +176,7 @@ class _UniversitieRegisterBodyState extends State<UniversitieRegisterBody> {
     setState(() {
       if (newImage!.path == null) {
       } else {
+        image = newImage.path;
         myUniversitie.logo = newImage.path;
       }
     });

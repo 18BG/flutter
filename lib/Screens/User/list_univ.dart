@@ -71,7 +71,7 @@ class _ListUnivState extends State<ListUniv> {
   }
 
   void _getFac() async {
-    Sqflite().fetchFiliereForFac(widget.name).then((value) {
+    Sqflite().fetchFiliereForField(widget.name).then((value) {
       setState(() {
         list = value;
       });

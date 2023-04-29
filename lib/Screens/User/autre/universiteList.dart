@@ -1,3 +1,4 @@
+import 'package:an_app/Screens/User/autre/fetch_field_forfac.dart';
 import 'package:an_app/Screens/User/field_page.dart';
 import 'package:an_app/Widgets/custom.dart';
 import 'package:an_app/model/db_management/sqflite_management/sqflite_conn.dart';
@@ -22,6 +23,7 @@ class _FieldListState extends State<UnivList> {
       return Scaffold(
         appBar: AppBar(),
         body: Container(
+          height: MediaQuery.of(context).size.height,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -37,7 +39,7 @@ class _FieldListState extends State<UnivList> {
               children: [
                 const Card(
                   child: Text(
-                    "Liste des filières",
+                    "Liste des universités ou structures d'enseignement",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -61,49 +63,57 @@ class _FieldListState extends State<UnivList> {
                     shrinkWrap: true,
                     itemCount: univList.length,
                     itemBuilder: (BuildContext context, i) {
+                      bool isTrue = i % 2 == 0;
+                      Color bgrdc = isTrue
+                          ? Color.fromRGBO(194, 138, 187, 1)
+                          : Color.fromRGBO(101, 153, 145, 1);
                       return InkWell(
-                        // onTap: () {
-                        //   Navigator.push(context,
-                        //       MaterialPageRoute(builder: (BuildContext context) {
-                        //     return FieldPage(field: univList[i]);
-                        //   }));
-                        // },
-                        child: Card(
-                          color: Colors.transparent,
-                          child: Column(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15)),
-                                child: Column(
-                                  children: [
-                                    const SizedBox(
-                                      height: 25,
-                                    ),
-                                    Container(
-                                      height:
-                                          MediaQuery.of(context).size.width /
-                                              1.6,
-                                      width: MediaQuery.of(context).size.width /
-                                          1.03,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Image.memory(
-                                          univList[i].logo,
-                                          fit: BoxFit.cover,
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (BuildContext context) {
+                            return FetchFieldForFac(univList[i]);
+                          }));
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 10),
+                          child: Card(
+                            elevation: 10,
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height:
+                                            MediaQuery.of(context).size.width /
+                                                1.6,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                1.03,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.memory(
+                                            univList[i].logo,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                child: CustomText(
-                                  univList[i].name,
-                                  factor: 1.5,
-                                ),
-                              )
-                            ],
+                                Container(
+                                  child: CustomText(
+                                    univList[i].name,
+                                    color: Colors.black,
+                                    factor: 1.5,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       );

@@ -27,6 +27,8 @@ class Sqflite with ChangeNotifier {
   List<SeriesFiliere> _serfil = [];
   List<SeriesFiliere> get serfil => _serfil;
 //Fetching
+  List<Option> _all_option = [];
+  List<Option> get alloption => _all_option;
   List<Option> _AnOption = [];
   List<Option> get AnOption => _AnOption;
 //serifiliere
@@ -41,7 +43,12 @@ class Sqflite with ChangeNotifier {
   //getter FiliereForFac
   List<Filiere> _AnFiliereForFac = [];
   List<Filiere> get AnFiliereForFac => _FiliereForFac;
-
+  List<Filiere> _FiliereForUniv = [];
+  List<Filiere> get FiliereForUniv => _FiliereForUniv;
+  //filiere concernant une option
+  List<Filiere> _FiliereForopt = [];
+  List<Filiere> get FiliereForopt => _FiliereForopt;
+  //k
   List<Filiere> _FiliereForFac = [];
   List<Filiere> get FiliereForFac => _FiliereForFac;
   List<Filiere> _filiereFetcher = [];
@@ -55,6 +62,12 @@ class Sqflite with ChangeNotifier {
   //Recuperer tous les universites
   List<Universite> _fetchAllUniv = [];
   List<Universite> get fetchAllUniv => _fetchAllUniv;
+  //Recuperer des univ pour une option
+  List<Universite> _fetchFacForOption = [];
+  List<Universite> get fetchFacForOption => _fetchFacForOption;
+  //Recuperer des univ pour une filiere
+  List<Universite> _fetchFacForFiliere = [];
+  List<Universite> get fetchFacForFiliere => _fetchFacForFiliere;
   Database? _database;
   List<MyJoinResultModel> _myResultList = [];
   List<MyJoinResultModel> get myResultList => _myResultList;
@@ -166,6 +179,23 @@ class Sqflite with ChangeNotifier {
     });
   }
 
+  //FONCTION POUR RECUPERER toutes les OPTIONS
+  Future<List<Option>> fetchAllOption() async {
+    print("Fetching.....");
+    final db = await database;
+    return db.transaction((txn) async {
+      return await txn.query(oTable).then((value) {
+        final convert = List<Map<String, dynamic>>.from(value);
+        List<Option> nList = List.generate(
+            convert.length, (index) => Option.deString(convert[index]));
+        _all_option = nList;
+
+        print("Fecthing finish");
+        return _all_option;
+      });
+    });
+  }
+
   //Recupere les series
   Future<List<Serie>> fetchSeries() async {
     final db = await database;
@@ -201,7 +231,7 @@ class Sqflite with ChangeNotifier {
   }
   //FONCTION POUR RECUPERE LES FILIERES DE SQFLITE pour des filieres donnes
 
-  Future<List<Filiere>> fetchFiliereForFac(String filiere) async {
+  Future<List<Filiere>> fetchFiliereForField(String filiere) async {
     print("fetching filiere ...");
     final db = await database;
     return db.transaction((txn) async {
@@ -215,7 +245,43 @@ class Sqflite with ChangeNotifier {
         print("Filiere fetched successfully");
         notifyListeners();
         return _FiliereForFac;
-        ;
+      });
+    });
+  }
+
+  Future<List<Filiere>> fetchFiliereForUniv(String facName) async {
+    print("fetching filiere ...");
+    final db = await database;
+    return db.transaction((txn) async {
+      return await txn.query(fTable,
+          where: 'facName=? ', whereArgs: [facName]).then((value) {
+        final convert = List<Map<String, dynamic>>.from(value);
+        List<Filiere> fList = List.generate(
+            convert.length, (index) => Filiere.fromString(convert[index]));
+        _FiliereForUniv = fList;
+        print("liste des new filiere ${fList.length}");
+        print("Filiere fetched successfully");
+        notifyListeners();
+        return _FiliereForUniv;
+      });
+    });
+  }
+
+//recuperer des filieres concernant une option
+  Future<List<Filiere>> fetchFiliereForOpt(String option) async {
+    print("fetching filiere ...");
+    final db = await database;
+    return db.transaction((txn) async {
+      return await txn
+          .query(fTable, where: 'opt=? ', whereArgs: [option]).then((value) {
+        final convert = List<Map<String, dynamic>>.from(value);
+        List<Filiere> fList = List.generate(
+            convert.length, (index) => Filiere.fromString(convert[index]));
+        _FiliereForopt = fList;
+        print("liste des new filiere ${fList.length}");
+        print("Filiere fetched successfully");
+        notifyListeners();
+        return _FiliereForopt;
       });
     });
   }
@@ -352,6 +418,42 @@ class Sqflite with ChangeNotifier {
         print("liste des new universite ${facList.length}");
         print("Filiere fetched successfully");
         return _fetchAllUniv;
+      });
+    });
+  }
+
+  //RECUPERATION DEs FACULTE pour une option
+  Future<List<Universite>> fetchFacForoptions(String name) async {
+    print("Recuperation ....");
+    final db = await database;
+    return db.transaction((txn) async {
+      return await txn
+          .query(facTable, where: 'name = ?', whereArgs: [name]).then((value) {
+        final convert = List<Map<String, dynamic>>.from(value);
+        List<Universite> facList = List.generate(
+            convert.length, (index) => Universite.fromString(convert[index]));
+        _fetchFacForOption = facList;
+        print("liste des new universite ${facList.length}");
+        print("Filiere fetched successfully");
+        return _fetchFacForOption;
+      });
+    });
+  }
+
+  //RECUPERATION DEs FACULTE pour une filiere
+  Future<List<Universite>> fetchFacForField(String name) async {
+    print("Recuperation ....");
+    final db = await database;
+    return db.transaction((txn) async {
+      return await txn
+          .query(facTable, where: 'name = ?', whereArgs: [name]).then((value) {
+        final convert = List<Map<String, dynamic>>.from(value);
+        List<Universite> facList = List.generate(
+            convert.length, (index) => Universite.fromString(convert[index]));
+        _fetchFacForFiliere = facList;
+        print("liste des new universite ${facList.length}");
+        print("Filiere fetched successfully");
+        return _fetchFacForFiliere;
       });
     });
   }
@@ -685,10 +787,25 @@ class Sqflite with ChangeNotifier {
     final db = await database;
     try {
       //suppression
+      await deleteSomething(sTable);
       await deleteSomething(fTable);
       await deleteSomething(oTable);
       await deleteSomething(facTable);
       await deleteSomething(sfTable);
+    } catch (e) {
+      print(e);
+    }
+    try {
+      Serie? serie;
+      //fetching from mysql
+      var result = await RUD().query("Select acronyme,nomSeries from series");
+      for (var row in result!.rows) {
+        String acronym = row.assoc()['acronyme']!;
+        String nSerie = row.assoc()['nomSeries']!;
+        serie = Serie(acronyme: acronym, nomSerie: nSerie);
+        await Sqflite().addSeries(serie);
+        print("serie enregistre dans sqflite");
+      }
     } catch (e) {
       print(e);
     }
@@ -706,7 +823,6 @@ class Sqflite with ChangeNotifier {
         option =
             Option(nom: nom, logo: decoded, commentaire: comment, fac: name);
         //on ajoute chaque option pour la fac trouvé
-        print(option.fac);
 
         Sqflite().addOption(option);
         print("option enregistre");
@@ -750,35 +866,7 @@ class Sqflite with ChangeNotifier {
     } catch (e) {
       print("Errrrooorr $e");
     }
-    try {
-      Universite? univ;
-      //recuperation depuis mysql
 
-      var result =
-          await RUD().query("select name,mail,password,logo from faculte");
-
-      for (var row in result!.rows) {
-        String nom = row.assoc().values.toList()[0]!;
-
-        String mail = row.assoc().values.toList()[1]!;
-        String password = row.assoc().values.toList()[2]!;
-
-        var img = row.assoc()['logo'] as String;
-        final decoded = base64Decode(img);
-        String fname = row.assoc()['facName']!;
-
-        String option = row.assoc()['opt']!;
-
-        univ = Universite(
-            name: nom, mail: mail, password: password, logo: decoded);
-        print("jusque la ça va");
-        //on ajoute chaque option pour la fac trouvé
-        await Sqflite().addFaculty(univ);
-        print("filiere enregistre");
-      }
-    } catch (e) {
-      print("Errrrooorr $e");
-    }
     try {
       SeriesFiliere? serie;
       //recuperation de serie depuis mysql
@@ -797,8 +885,36 @@ class Sqflite with ChangeNotifier {
         print("jusque la ça va");
         //on ajoute chaque option pour la fac trouvé
         await addSerieFiliere(serie);
-        print("serie enregistre");
+        print("seriefiliere enregistre");
       }
+    } catch (e) {
+      print("Errrrooorr $e");
+    }
+    try {
+      List<Universite> listuniv = [];
+      Universite? univ;
+      //recuperation depuis mysql
+
+      var result =
+          await RUD().query("select name,mail,password,logo from faculte");
+      //name,mail,password,logo
+
+      for (var row in result!.rows) {
+        String nom = row.assoc().values.toList()[0]!;
+        String mail = row.assoc().values.toList()[1]!;
+        String password = row.assoc().values.toList()[2]!;
+        var img = row.assoc()['logo'] as String;
+        final decoded = base64Decode(img);
+
+        univ = Universite(
+            name: nom, mail: mail, password: password, logo: decoded);
+        //on ajoute chaque option pour la fac trouvé
+        print("faculté is adding ...");
+        await Sqflite().addFaculty(univ);
+        print("faculté enregistre");
+        listuniv.add(univ);
+      }
+      print(listuniv.length);
     } catch (e) {
       print("Errrrooorr $e");
     }

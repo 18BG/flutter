@@ -2,9 +2,6 @@ import 'dart:io';
 
 import 'package:an_app/model/iniversities%20model/classe_universite.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../../../model/db_management/mysql_management/rudOndb.dart';
 
 class HomePageBody extends StatefulWidget {
   final Universite faculte;
@@ -15,13 +12,13 @@ class HomePageBody extends StatefulWidget {
 }
 
 class _HomePageBodyState extends State<HomePageBody> {
-  final List<String> items = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-  ];
+  final Map<String, Widget> items = {
+    'Présentation': const Icon(Icons.screen_share),
+    'Informations': const Icon(Icons.info),
+    'Filières': const Icon(Icons.school),
+    'Options': const Icon(Icons.book),
+    'Item 5': const Icon(Icons.h_mobiledata),
+  };
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -63,7 +60,7 @@ class _HomePageBodyState extends State<HomePageBody> {
           SizedBox(
             height: MediaQuery.of(context).size.width * 0.04,
           ),
-          SizedBox(
+          Container(
             height: MediaQuery.of(context).size.width * 0.8,
             width: MediaQuery.of(context).size.width * 0.8,
             child: GridView.builder(
@@ -71,9 +68,27 @@ class _HomePageBodyState extends State<HomePageBody> {
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2),
                 itemBuilder: (BuildContext context, int index) {
-                  return Card(
+                  return Container(
+                    margin: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadiusDirectional.only(
+                            topEnd: Radius.circular(12),
+                            bottomStart: Radius.elliptical(0, 15)),
+                        gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [
+                              Color.fromARGB(127, 0, 0, 0),
+                              Color.fromARGB(255, 84, 226, 212)
+                            ])),
                     child: Center(
-                      child: Text("items[index]"),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          items.values.elementAt(index),
+                          Text(items.keys.elementAt(index))
+                        ],
+                      ),
                     ),
                   );
                 }),
