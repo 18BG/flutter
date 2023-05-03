@@ -13,7 +13,7 @@ class Mysql {
         port: port,
         userName: user,
         password: pwd,
-        databaseName: "gde");
+        databaseName: "GE");
     await conn.connect();
     print("DB connected");
     return conn;

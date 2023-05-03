@@ -87,7 +87,7 @@ class _ExplorerState extends State<Explorer> {
                 ]),
               ),
               Container(
-                height: 800,
+                height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 decoration: const BoxDecoration(
                     gradient: LinearGradient(colors: [
@@ -110,7 +110,8 @@ class _ExplorerState extends State<Explorer> {
                       fontStyle: FontStyle.normal,
                     ),
                     Container(
-                      height: 190,
+                      height: MediaQuery.of(context).size.height * 0.22,
+                      //height: 190,
                       child: ListView.separated(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
@@ -131,8 +132,12 @@ class _ExplorerState extends State<Explorer> {
                                       child: Container(
                                         margin: const EdgeInsets.symmetric(
                                             horizontal: 5),
-                                        height: 150,
-                                        width: 100,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.18,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.27,
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(15)),
@@ -173,7 +178,8 @@ class _ExplorerState extends State<Explorer> {
                       fontStyle: FontStyle.normal,
                     ),
                     Container(
-                      height: 150,
+                      height: MediaQuery.of(context).size.height * 0.18,
+                      //height: 150,
                       child: ListView.separated(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
@@ -194,8 +200,12 @@ class _ExplorerState extends State<Explorer> {
                                       child: Container(
                                         margin: const EdgeInsets.fromLTRB(
                                             5, 0, 5, 0),
-                                        height: 100,
-                                        width: 150,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.12,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.33,
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(15)),
@@ -233,9 +243,6 @@ class _ExplorerState extends State<Explorer> {
                               )),
                           itemCount: option.length),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
                     CustomText(
                       "Filière",
                       weiht: FontWeight.bold,
@@ -244,7 +251,7 @@ class _ExplorerState extends State<Explorer> {
                       fontStyle: FontStyle.normal,
                     ),
                     Container(
-                      height: 150,
+                      height: MediaQuery.of(context).size.height * 0.18,
                       child: ListView.separated(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
@@ -266,8 +273,12 @@ class _ExplorerState extends State<Explorer> {
                                       child: Container(
                                         margin: const EdgeInsets.fromLTRB(
                                             5, 0, 5, 0),
-                                        height: 100,
-                                        width: 150,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.12,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.33,
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(15)),
@@ -303,7 +314,7 @@ class _ExplorerState extends State<Explorer> {
                           itemCount: field.length),
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 5,
                     ),
                     CustomText(
                       "Informations",
@@ -313,7 +324,7 @@ class _ExplorerState extends State<Explorer> {
                       fontStyle: FontStyle.normal,
                     ),
                     Container(
-                      height: 140,
+                      height: MediaQuery.of(context).size.height * 0.2,
                       child: ListView.separated(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
@@ -323,21 +334,21 @@ class _ExplorerState extends State<Explorer> {
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  Center(
-                                    child: Container(
-                                      margin:
-                                          const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                      height: 100,
-                                      width: 150,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15)),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(15),
-                                        child: Image.memory(
-                                          field[index].logo,
-                                          fit: BoxFit.cover,
-                                        ),
+                                  Container(
+                                    margin:
+                                        const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                    height: MediaQuery.of(context).size.height *
+                                        0.15,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.31,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: Image.memory(
+                                        field[index].logo,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),

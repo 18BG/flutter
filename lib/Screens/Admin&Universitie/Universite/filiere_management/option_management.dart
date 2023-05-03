@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:an_app/Screens/Admin&Universitie/Admin/TextFormFieldWidget.dart';
+import 'package:an_app/Screens/Admin&Universitie/Universite/filiere_management/option_form.dart';
 import 'package:an_app/model/db_management/sqflite_management/sqflite_conn.dart';
 
 import 'package:an_app/model/iniversities%20model/class_option.dart';
@@ -109,7 +110,10 @@ class _OptionManagementState extends State<OptionManagement> {
           : OptionFetcher(widget.faculty),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Add();
+          showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (_) => OptionForm(faculty: widget.faculty));
         },
         child: const Icon(Icons.add),
       ),
@@ -139,7 +143,9 @@ class _OptionManagementState extends State<OptionManagement> {
                         key: key,
                         child: Column(
                           children: [
-                            Image.asset("assets/images/Noimage.png"),
+                            (image == null)
+                                ? Image.asset("assets/images/Noimage.png")
+                                : Image.file(File(image!)),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [

@@ -733,8 +733,8 @@ class Sqflite with ChangeNotifier {
       SeriesFiliere? serie;
       //recuperation de serie depuis mysql
 
-      var result = await RUD()
-          .query("select acronyme,nomSeries ,nomfiliere  from seriesfiliere");
+      var result =
+          await RUD().query("select acronyme,nomSeries ,nomfiliere  from ");
 
       for (var row in result!.rows) {
         String acronyme = row.assoc().values.toList()[0]!;
@@ -798,7 +798,7 @@ class Sqflite with ChangeNotifier {
     try {
       Serie? serie;
       //fetching from mysql
-      var result = await RUD().query("Select acronyme,nomSeries from series");
+      var result = await RUD().query("Select acronyme,nomSeries from serie");
       for (var row in result!.rows) {
         String acronym = row.assoc()['acronyme']!;
         String nSerie = row.assoc()['nomSeries']!;

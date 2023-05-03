@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:an_app/Screens/Admin&Universitie/Universite/filiere_fetcher.dart';
+import 'package:an_app/Screens/Admin&Universitie/Universite/filiere_management/field_form.dart';
 import 'package:an_app/model/iniversities%20model/class_filiere.dart';
 import 'package:an_app/model/iniversities%20model/class_option.dart';
 import 'package:flutter/material.dart';
@@ -111,7 +112,12 @@ class _FiliereManageState extends State<FiliereManage> {
             )
           : FiliereFetcher(widget.option),
       floatingActionButton: FloatingActionButton(
-        onPressed: Add,
+        onPressed: (() {
+          showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (_) => FiledForm(option: widget.option));
+        }),
         child: const Icon(Icons.add),
       ),
     );

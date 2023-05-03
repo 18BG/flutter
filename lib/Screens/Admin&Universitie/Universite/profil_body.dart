@@ -4,6 +4,7 @@ import 'package:an_app/Function/connectFonction.dart';
 import 'package:an_app/Screens/Admin&Universitie/Admin/TextFormFieldWidget.dart';
 import 'package:an_app/Screens/Admin&Universitie/Universite/univLoginBody.dart';
 import 'package:an_app/Screens/Admin&Universitie/Universite/universitie_home.dart';
+import 'package:an_app/Widgets/custom.dart';
 
 import 'package:an_app/model/iniversities%20model/classe_universite.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,13 @@ class _ProfilState extends State<Profil> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const Text("Modifications des informations"),
+            Container(
+                margin: EdgeInsets.all(10),
+                child: CustomText(
+                  "Modifications des informations",
+                  factor: 1.5,
+                  fontStyle: FontStyle.normal,
+                )),
             Form(
                 key: key,
                 child: Card(
@@ -94,7 +101,20 @@ class _ProfilState extends State<Profil> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       (image == null)
-                          ? Image.memory(widget.faculte.logo)
+                          ? Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.memory(
+                                  widget.faculte.logo,
+                                  fit: BoxFit.cover,
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  width: MediaQuery.of(context).size.width,
+                                ),
+                              ),
+                            )
                           : Image.file(File(image!)),
                       const SizedBox(
                         height: 15,
@@ -124,6 +144,9 @@ class _ProfilState extends State<Profil> {
                         suffix: false,
                         f: check,
                       ),
+                      const SizedBox(
+                        height: 6,
+                      ),
                       TextFormFields(
                         toChange: mail,
                         hint: widget.faculte.mail,
@@ -133,12 +156,18 @@ class _ProfilState extends State<Profil> {
                         suffix: false,
                         f: check,
                       ),
+                      const SizedBox(
+                        height: 6,
+                      ),
                       TextFormFields(
                         labelText: "Entrez l'ancien mot de passe da la faculté",
                         hide: true,
                         prefix: false,
                         suffix: true,
                         f: pass1Check,
+                      ),
+                      const SizedBox(
+                        height: 6,
                       ),
                       TextFormFields(
                         toChange: password,
@@ -148,6 +177,9 @@ class _ProfilState extends State<Profil> {
                         prefix: false,
                         suffix: true,
                         f: pass2Check,
+                      ),
+                      const SizedBox(
+                        height: 6,
                       ),
                       TextFormFields(
                         labelText:

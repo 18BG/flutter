@@ -56,8 +56,8 @@ class Welcome extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    UpdateDB().updateProfil(
-                        "select nom from administrateur where id =1");
+                    // UpdateDB().updateProfil(
+                    //     "select nom from administrateur where id =1");
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const AdminLogin()),

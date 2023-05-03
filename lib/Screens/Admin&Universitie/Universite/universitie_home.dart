@@ -56,10 +56,18 @@ class _UniversititHomePageState extends State<UniversititHomePage> {
                             fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 10),
-                      Image.memory(
-                        widget.faculty.logo,
-                        height: 70,
-                        width: 100,
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15)),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.memory(
+                            widget.faculty.logo,
+                            fit: BoxFit.cover,
+                            height: MediaQuery.of(context).size.width * 0.2,
+                            width: MediaQuery.of(context).size.width * 0.3,
+                          ),
+                        ),
                       ),
                     ],
                   ),

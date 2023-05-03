@@ -41,6 +41,7 @@ class _FieldListState extends State<UnivList> {
                   child: Text(
                     "Liste des universités ou structures d'enseignement",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 const SizedBox(

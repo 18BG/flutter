@@ -108,7 +108,19 @@ class _UniversitieRegisterBodyState extends State<UniversitieRegisterBody> {
                 children: [
                   (image == null)
                       ? Image.asset("assets/images/noimage.png")
-                      : Image.file(File(image!)),
+                      : Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15)),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Image.file(
+                              File(image!),
+                              fit: BoxFit.cover,
+                              height: MediaQuery.of(context).size.width * 0.8,
+                              width: MediaQuery.of(context).size.width,
+                            ),
+                          ),
+                        ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

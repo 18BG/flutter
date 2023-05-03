@@ -24,38 +24,40 @@ class _HomePageBodyState extends State<HomePageBody> {
     return SingleChildScrollView(
       child: Center(
         child: Column(children: [
-          Card(
-            //margin: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-            color: Colors.white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 15),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  //height: MediaQuery.of(context).size.width * 0.4,
-                  child: Card(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Image.memory(
-                      widget.faculte.logo,
-                      fit: BoxFit.contain,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 15),
+              Column(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.width * 0.7,
+                    child: Card(
+                      color: Colors.black,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Image.memory(
+                          widget.faculte.logo,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ),
+                ],
+              ),
+              const SizedBox(height: 15),
+              Text(
+                widget.faculte.name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 15),
-                Text(
-                  widget.faculte.name,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
           SizedBox(
             height: MediaQuery.of(context).size.width * 0.04,
@@ -73,7 +75,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadiusDirectional.only(
                             topEnd: Radius.circular(12),
-                            bottomStart: Radius.elliptical(0, 15)),
+                            bottomStart: Radius.elliptical(15, 12)),
                         gradient: LinearGradient(
                             begin: Alignment.bottomCenter,
                             end: Alignment.topCenter,
