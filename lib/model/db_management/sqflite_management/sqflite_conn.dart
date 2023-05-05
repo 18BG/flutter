@@ -5,6 +5,7 @@ import 'package:an_app/model/iniversities%20model/class_filiere.dart';
 import 'package:an_app/model/iniversities%20model/class_option.dart';
 import 'package:an_app/model/iniversities%20model/class_series_filiere.dart';
 import 'package:an_app/model/iniversities%20model/classe_universite.dart';
+import 'package:an_app/model/iniversities%20model/info_model.dart';
 import 'package:an_app/model/iniversities%20model/joinModel.dart';
 import 'package:an_app/model/iniversities%20model/serie_model.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
+
+import '../../iniversities model/story_model.dart';
 
 class Sqflite with ChangeNotifier {
   List<Universite> _fetchAnUniv = [];
@@ -39,6 +42,12 @@ class Sqflite with ChangeNotifier {
   //getter pour les options
   List<Option> _optionFetcher = [];
   List<Option> get optionFetcher => _optionFetcher;
+  //getter pour les info
+  List<Info> _infoFetcher = [];
+  List<Info> get infoFetcher => _infoFetcher;
+  //getter pour les info
+  List<Info> _infoallFetcher = [];
+  List<Info> get infoallFetcher => _infoallFetcher;
   //getter pour les filieres
   //getter FiliereForFac
   List<Filiere> _AnFiliereForFac = [];
@@ -88,8 +97,15 @@ class Sqflite with ChangeNotifier {
   static const facTable = 'faculte';
   static const sTable = 'series';
   static const sfTable = 'seriefiliere';
+  static const iTable = 'info';
+  static const hTable = 'story';
   Future<void> _createDb(Database db, int version) async {
     await db.transaction((txn) async {
+      await txn
+          .execute('''CREATE TABLE $iTable(titre TEXT,contenue TEXT,fac TEXT, 
+      image BLOB,datedebut TEXT,datefin TEXT)''');
+      await txn.execute(
+          '''CREATE TABLE $hTable(intro TEXT, contenu TEXT,fac TEXT)''');
       await txn.execute(
           '''CREATE TABLE $oTable(nom TEXT, logo BLOB,commentaire TEXT,fac TEXT)''');
       await txn.execute(
@@ -156,6 +172,41 @@ class Sqflite with ChangeNotifier {
 
         print("Fecthing finish");
         return _optionFetcher;
+      });
+    });
+  }
+
+  //FONCTION POUR RECUPERER LES infos DE SQFLITE
+  Future<List<Info>> fetchInfo(String fac) async {
+    print("Fetching.....");
+    final db = await database;
+    return db.transaction((txn) async {
+      return await txn
+          .query(iTable, where: 'fac=?', whereArgs: [fac]).then((value) {
+        final convert = List<Map<String, dynamic>>.from(value);
+        List<Info> nList = List.generate(
+            convert.length, (index) => Info.fromString(convert[index]));
+        _infoFetcher = nList;
+
+        print("Fecthing finish");
+        return _infoFetcher;
+      });
+    });
+  }
+
+  //FONCTION POUR RECUPERER tous LES infos DE SQFLITE
+  Future<List<Info>> fetchallInfo() async {
+    print("Fetching.....");
+    final db = await database;
+    return db.transaction((txn) async {
+      return await txn.query(iTable).then((value) {
+        final convert = List<Map<String, dynamic>>.from(value);
+        List<Info> nList = List.generate(
+            convert.length, (index) => Info.fromString(convert[index]));
+        _infoallFetcher = nList;
+
+        print("Fecthing finish");
+        return _infoallFetcher;
       });
     });
   }
@@ -498,6 +549,39 @@ class Sqflite with ChangeNotifier {
     });
   }
 
+//ajout d'historique
+  Future<void> addStory(Story story) async {
+    print("adding Story...");
+    final db = await database;
+    await db.transaction((txn) async {
+      await txn
+          .insert(hTable, story.toMap(),
+              conflictAlgorithm: ConflictAlgorithm.replace)
+          .then((value) {
+        print("Insertion termine");
+      });
+    });
+  }
+
+  //ajout d'info
+  Future<void> addInfo(Info info) async {
+    print("adding Story...");
+    final db = await database;
+    try {
+      await db.transaction((txn) async {
+        await txn
+            .insert(iTable, info.enMa(),
+                conflictAlgorithm: ConflictAlgorithm.replace)
+            .then((value) {
+          print("Insertion termine");
+        });
+      });
+    } catch (e) {
+      print("l'info n'est pas enregistrer");
+      print("errrreeuurr :  $e");
+    }
+  }
+
   //FONCTIOND'AJOUT DE FILIERE DANS SQFLITE
   Future<void> addFiliere(Filiere fli) async {
     print("adding filiere...");
@@ -597,6 +681,18 @@ class Sqflite with ChangeNotifier {
     print("MAJ faite");
   }
 
+  //mise a jour du story
+  Future<void> update(String table, var values,
+      {String? where, List<Object?>? whereArgs}) async {
+    final db = await database;
+    try {
+      await db.update(table, values, where: where, whereArgs: whereArgs);
+      print("Mise a jour reussie");
+    } catch (e) {
+      print("Erreur lors de la maj $e");
+    }
+  }
+
   //Mise a jour des filieres
   Future<void> updateField(String fieldName, Filiere field) async {
     final db = await database;
@@ -616,6 +712,13 @@ class Sqflite with ChangeNotifier {
     final db = await database;
     await db.delete(oTable, where: 'fac = ?', whereArgs: [fac.name]);
     print("Suppression termine");
+  }
+
+  //Supprimer toutes les info
+  Future<void> deleteAllInfo(Universite fac) async {
+    final db = await database;
+    await db.delete(iTable, where: 'fac=?', whereArgs: [fac.name]);
+    print("Info deleted");
   }
 
 //supprimer toutes les fileres

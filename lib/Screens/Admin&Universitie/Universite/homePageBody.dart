@@ -1,7 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:an_app/Screens/Admin&Universitie/Universite/filiere_management/info_management.dart';
+import 'package:an_app/Screens/Admin&Universitie/Universite/filiere_management/option_management.dart';
+import 'package:an_app/model/iniversities%20model/class_option.dart';
 import 'package:an_app/model/iniversities%20model/classe_universite.dart';
 import 'package:flutter/material.dart';
+
+import '../../../model/db_management/mysql_management/rudOndb.dart';
+import '../../../model/iniversities model/info_model.dart';
+import 'filiere_management/info_fetcher.dart';
 
 class HomePageBody extends StatefulWidget {
   final Universite faculte;
@@ -12,12 +20,12 @@ class HomePageBody extends StatefulWidget {
 }
 
 class _HomePageBodyState extends State<HomePageBody> {
+  List<Info> infoList = [];
+  List<Option> optlist = [];
   final Map<String, Widget> items = {
     'Présentation': const Icon(Icons.screen_share),
     'Informations': const Icon(Icons.info),
-    'Filières': const Icon(Icons.school),
-    'Options': const Icon(Icons.book),
-    'Item 5': const Icon(Icons.h_mobiledata),
+    'Options': const Icon(Icons.school),
   };
   @override
   Widget build(BuildContext context) {
@@ -70,26 +78,45 @@ class _HomePageBodyState extends State<HomePageBody> {
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2),
                 itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    margin: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadiusDirectional.only(
-                            topEnd: Radius.circular(12),
-                            bottomStart: Radius.elliptical(15, 12)),
-                        gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                            colors: [
-                              Color.fromARGB(127, 0, 0, 0),
-                              Color.fromARGB(255, 84, 226, 212)
-                            ])),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          items.values.elementAt(index),
-                          Text(items.keys.elementAt(index))
-                        ],
+                  return InkWell(
+                    onTap: () {
+                      if (index == 0) {
+                      } else if (index == 1) {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return InfoManagement(
+                              faculty: widget.faculte, list: infoList);
+                        }));
+                      } else {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return OptionManagement(
+                              faculty: widget.faculte, list: optlist);
+                        }));
+                      }
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadiusDirectional.only(
+                              topEnd: Radius.circular(12),
+                              bottomStart: Radius.elliptical(15, 12)),
+                          gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [
+                                Color.fromARGB(127, 0, 0, 0),
+                                Color.fromARGB(255, 84, 226, 212)
+                              ])),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            items.values.elementAt(index),
+                            Text(items.keys.elementAt(index)),
+                            Text("$index"),
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -98,5 +125,40 @@ class _HomePageBodyState extends State<HomePageBody> {
         ]),
       ),
     );
+  }
+
+  Future<void> fetchInfo() async {
+    try {
+      Info? info;
+      var result = await RUD().query(
+          "select titre,contenue,image,fac,datedebut,datefin from info where fac = :fac",
+          {"fac": widget.faculte.name});
+      for (var row in result!.rows) {
+        String titre = row.assoc().values.toList()[0]!;
+        String contenue = row.assoc().values.toList()[1]!;
+        var img = row.assoc()['image'] as String;
+        final decoded = base64Decode(img);
+        String fac = row.assoc()['fac']!;
+        DateTime datedebut = DateTime.parse(row.assoc().values.toList()[4]!);
+        DateTime datefin = DateTime.parse(row.assoc().values.toList()[5]!);
+        info = Info(
+            titre: titre,
+            contenue: contenue,
+            fac: fac,
+            image: decoded,
+            datedebut: datedebut,
+            datefin: datefin);
+      }
+      if (info != null) {
+        setState(() {
+          infoList.add(info!);
+        });
+        print("Nouvelle info");
+        print(infoList);
+        print(infoList.length);
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }

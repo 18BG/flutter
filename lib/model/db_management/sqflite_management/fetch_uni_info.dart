@@ -1,4 +1,5 @@
 import 'package:an_app/model/db_management/sqflite_management/sqflite_conn.dart';
+import 'package:an_app/model/iniversities%20model/story_model.dart';
 
 import '../../iniversities model/classe_universite.dart';
 
@@ -44,4 +45,26 @@ class FetcUnivInfo {
       });
     });
   }
+
+  // Future<void> addOption(Option opt) async {
+  //   print("Sqflite.....");
+  //   final db = await database;
+  //   print("Database created");
+  //   await db.transaction((txn) async {
+  //     await txn
+  //         .insert(oTable, opt.toMap(),
+  //             conflictAlgorithm: ConflictAlgorithm.replace)
+  //         .then((value) {
+  //       print("Insertion termine");
+  //       final file = Option(
+  //           nom: opt.nom,
+  //           logo: opt.logo,
+  //           commentaire: opt.commentaire,
+  //           fac: opt.fac);
+  //       _option.add(file);
+  //       print("Sauvegarder en locale");
+  //     });
+  //   });
+  // }
+
 }

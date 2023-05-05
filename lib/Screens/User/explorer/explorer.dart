@@ -1,3 +1,4 @@
+import 'package:an_app/Screens/Admin&Universitie/Universite/filiere_management/info_page.dart';
 import 'package:an_app/Screens/User/explorer/ex_fetch_fac_for_field.dart';
 import 'package:an_app/Screens/User/explorer/ex_fetch_fac_for_option.dart';
 import 'package:an_app/Widgets/custom.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'ex_fetch_field_for_fac.dart';
+import 'info_page.dart';
 
 class Explorer extends StatefulWidget {
   const Explorer({super.key});
@@ -21,6 +23,8 @@ class _ExplorerState extends State<Explorer> {
       var univ = db.fetchAllUniv;
       var field = db.fetchAllfield;
       var option = db.alloption;
+      var info = db.infoallFetcher;
+      print("Informations : $info");
       print("univ ${univ.length}");
       print("option ${option.length}");
       print("filiere ${field.length}");
@@ -328,44 +332,53 @@ class _ExplorerState extends State<Explorer> {
                       child: ListView.separated(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          itemBuilder: ((context, index) => Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    margin:
-                                        const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                    height: MediaQuery.of(context).size.height *
-                                        0.15,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.31,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: Image.memory(
-                                        field[index].logo,
-                                        fit: BoxFit.cover,
+                          itemBuilder: ((context, index) => InkWell(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                    return InfoAPage(info[index]);
+                                  }));
+                                },
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      margin:
+                                          const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.15,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.31,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: Image.memory(
+                                          info[index].image,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  CustomText(
-                                    field[index].nomfiliere,
-                                    color: Colors.black,
-                                    fontStyle: FontStyle.normal,
-                                  )
-                                ],
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    CustomText(
+                                      info[index].titre,
+                                      color: Colors.black,
+                                      fontStyle: FontStyle.normal,
+                                    )
+                                  ],
+                                ),
                               )),
                           separatorBuilder: ((context, index) => const SizedBox(
                                 width: 10,
                               )),
-                          itemCount: field.length),
+                          itemCount: info.length),
                     ),
                   ],
                 ),

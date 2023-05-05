@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:an_app/Screens/Admin&Universitie/Universite/filiere_management/info_management.dart';
 import 'package:an_app/Screens/Admin&Universitie/Universite/filiere_management/option_management.dart';
 import 'package:an_app/Screens/Admin&Universitie/Universite/homePageBody.dart';
 import 'package:an_app/Screens/Admin&Universitie/Universite/profil_body.dart';
 import 'package:an_app/Screens/Admin&Universitie/Universite/universitie_login.dart';
 
 import 'package:an_app/model/iniversities%20model/classe_universite.dart';
+import 'package:an_app/model/iniversities%20model/info_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +25,7 @@ class UniversititHomePage extends StatefulWidget {
 
 class _UniversititHomePageState extends State<UniversititHomePage> {
   List<Option> optionList = [];
+  List<Info> infoList = [];
   @override
   Widget build(BuildContext context) {
     bool? returnOrno;
@@ -105,7 +108,8 @@ class _UniversititHomePageState extends State<UniversititHomePage> {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => Scaffold(),
+                        builder: (context) => InfoManagement(
+                            faculty: widget.faculty, list: infoList),
                       ),
                     );
                   },
@@ -185,6 +189,45 @@ class _UniversititHomePageState extends State<UniversititHomePage> {
         print("Nouvelle option");
         print(optionList);
         print(optionList.length);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+//   titre varchar(50) not null,
+//   contenue varchar(5000) not null,
+//   image longblob,datedebut Date,datefin date
+// ,fac
+  Future<void> fetchInfo() async {
+    try {
+      Info? info;
+      var result = await RUD().query(
+          "select titre,contenue,image,fac,datedebut,datefin from info where fac = :fac",
+          {"fac": widget.faculty.name});
+      for (var row in result!.rows) {
+        String titre = row.assoc().values.toList()[0]!;
+        String contenue = row.assoc().values.toList()[1]!;
+        var img = row.assoc()['image'] as String;
+        final decoded = base64Decode(img);
+        String fac = row.assoc()['fac']!;
+        DateTime datedebut = DateTime.parse(row.assoc().values.toList()[4]!);
+        DateTime datefin = DateTime.parse(row.assoc().values.toList()[5]!);
+        info = Info(
+            titre: titre,
+            contenue: contenue,
+            fac: fac,
+            image: decoded,
+            datedebut: datedebut,
+            datefin: datefin);
+      }
+      if (info != null) {
+        setState(() {
+          infoList.add(info!);
+        });
+        print("Nouvelle info");
+        print(infoList);
+        print(infoList.length);
       }
     } catch (e) {
       print(e);

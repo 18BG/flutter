@@ -1,7 +1,6 @@
 import 'package:an_app/Screens/User/ancien/fetchAlloption.dart';
 import 'package:an_app/Screens/User/autre/page_univ.dart';
 import 'package:an_app/Screens/User/explorer/explorer.dart';
-import 'package:an_app/Screens/User/explorer/fetch_all_info.dart';
 import 'package:an_app/model/db_management/sqflite_management/sqflite_conn.dart';
 import 'package:an_app/model/iniversities%20model/classe_universite.dart';
 
@@ -11,14 +10,14 @@ import 'package:provider/provider.dart';
 import '../../../model/iniversities model/class_filiere.dart';
 import '../univ_page.dart';
 
-class FetchAllField2 extends StatefulWidget {
-  FetchAllField2({super.key});
+class FetchAllInfo2 extends StatefulWidget {
+  FetchAllInfo2({super.key});
 
   @override
-  State<FetchAllField2> createState() => _FetchAllField2State();
+  State<FetchAllInfo2> createState() => _FetchAllField2State();
 }
 
-class _FetchAllField2State extends State<FetchAllField2> {
+class _FetchAllField2State extends State<FetchAllInfo2> {
   late Future _optList;
 
   @override
@@ -26,7 +25,7 @@ class _FetchAllField2State extends State<FetchAllField2> {
     // TODO: implement initState
     super.initState();
 
-    _optList = _getOption();
+    _optList = _getInfo();
   }
 
   @override
@@ -40,7 +39,7 @@ class _FetchAllField2State extends State<FetchAllField2> {
                 child: Text(snapshot.error.toString()),
               );
             } else {
-              return FetchAllInfo2();
+              return Explorer();
             }
           } else {
             return const Center(
@@ -50,8 +49,8 @@ class _FetchAllField2State extends State<FetchAllField2> {
         });
   }
 
-  Future _getOption() async {
+  Future _getInfo() async {
     final provider = Provider.of<Sqflite>(context, listen: false);
-    return await provider.fetchtAllFiliere();
+    return await provider.fetchallInfo();
   }
 }
