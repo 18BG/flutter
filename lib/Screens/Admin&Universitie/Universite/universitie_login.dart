@@ -1,10 +1,17 @@
+import 'dart:io';
+
 import 'package:an_app/Screens/Admin&Universitie/Universite/univLoginBody.dart';
 import 'package:an_app/Screens/main_screen/welcome.dart';
 import 'package:flutter/material.dart';
 
-class UniversitieLogin extends StatelessWidget {
+class UniversitieLogin extends StatefulWidget {
   const UniversitieLogin({super.key});
 
+  @override
+  State<UniversitieLogin> createState() => _UniversitieLoginState();
+}
+
+class _UniversitieLoginState extends State<UniversitieLogin> {
   @override
   Widget build(BuildContext context) {
     bool? returnOrno;
@@ -48,7 +55,7 @@ class UniversitieLogin extends StatelessWidget {
         }),
         child: Scaffold(
           appBar: AppBar(
-            automaticallyImplyLeading: false,
+            automaticallyImplyLeading: Platform.isIOS,
             title: const Text('Guide de l\'Etudiant'),
             centerTitle: true,
           ),

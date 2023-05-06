@@ -2,10 +2,9 @@ import 'package:an_app/Widgets/custom.dart';
 import 'package:an_app/model/db_management/sqflite_management/fetch_uni_info.dart';
 import 'package:an_app/model/iniversities%20model/class_filiere.dart';
 import 'package:an_app/model/iniversities%20model/class_option.dart';
-import 'package:an_app/model/iniversities%20model/classe_universite.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'dart:io';
 import 'package:provider/provider.dart';
 
 import '../../model/db_management/sqflite_management/sqflite_conn.dart';
@@ -45,7 +44,7 @@ class _UnivPageState extends State<UnivPage> {
         backgroundColor: const Color.fromRGBO(17, 117, 177, 1),
         appBar: AppBar(
           title: Text(fac[0].name),
-          automaticallyImplyLeading: false,
+          automaticallyImplyLeading: Platform.isIOS,
           centerTitle: true,
         ),
         body: SingleChildScrollView(

@@ -5,7 +5,7 @@ import 'package:an_app/model/iniversities%20model/serie_model.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-
+import 'dart:io';
 import '../../../Widgets/custom.dart';
 import '../field_page.dart';
 
@@ -18,6 +18,8 @@ class FetchSomefield extends StatefulWidget {
 }
 
 class _FieldListState extends State<FetchSomefield> {
+  bool isIOS = Platform.isIOS;
+  bool isAndroid = Platform.isAndroid;
   @override
   Widget build(BuildContext context) {
     return Consumer<Sqflite>(builder: (_, db, __) {
@@ -26,9 +28,11 @@ class _FieldListState extends State<FetchSomefield> {
       print("nb filiere");
       print(list.length);
       return Scaffold(
+        backgroundColor: Color.fromRGBO(17, 117, 177, 1),
+        appBar: (Platform.isIOS) ? AppBar() : null,
         body: Container(
           height: MediaQuery.of(context).size.height,
-          margin: EdgeInsets.only(top: 30),
+          margin: (isAndroid) ? const EdgeInsets.only(top: 30) : null,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,

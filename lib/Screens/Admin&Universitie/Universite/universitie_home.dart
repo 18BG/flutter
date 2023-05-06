@@ -10,7 +10,6 @@ import 'package:an_app/Screens/Admin&Universitie/Universite/universitie_login.da
 import 'package:an_app/model/iniversities%20model/classe_universite.dart';
 import 'package:an_app/model/iniversities%20model/info_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../../model/db_management/mysql_management/rudOndb.dart';
 import '../../../model/iniversities model/class_option.dart';
@@ -26,12 +25,14 @@ class UniversititHomePage extends StatefulWidget {
 class _UniversititHomePageState extends State<UniversititHomePage> {
   List<Option> optionList = [];
   List<Info> infoList = [];
+  bool isIos = Platform.isIOS;
   @override
   Widget build(BuildContext context) {
     bool? returnOrno;
     return WillPopScope(
         child: Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: Platform.isIOS,
             title: Text(widget.faculty.name),
             centerTitle: true,
             elevation: 0,
@@ -39,84 +40,170 @@ class _UniversititHomePageState extends State<UniversititHomePage> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
-          drawer: Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                DrawerHeader(
-                  decoration: const BoxDecoration(
-                    color: Colors.teal,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        widget.faculty.name,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15)),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Image.memory(
-                            widget.faculty.logo,
-                            fit: BoxFit.cover,
-                            height: MediaQuery.of(context).size.width * 0.2,
-                            width: MediaQuery.of(context).size.width * 0.3,
-                          ),
+          drawer: !isIos
+              ? Drawer(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: <Widget>[
+                      DrawerHeader(
+                        decoration: const BoxDecoration(
+                          color: Colors.teal,
                         ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              widget.faculty.name,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 10),
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.memory(
+                                  widget.faculty.logo,
+                                  fit: BoxFit.cover,
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.2,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.3,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.person),
+                        title: const Text('Gérer le profil'),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => Profil(
+                                faculte: widget.faculty,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.school),
+                        title: const Text('Gérer les filières'),
+                        onTap: () async {
+                          // ignore: use_build_context_synchronously
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => OptionManagement(
+                                  faculty: widget.faculty, list: optionList),
+                            ),
+                          );
+                          await fetchOption();
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.info),
+                        title: const Text('Gérer les informations'),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => InfoManagement(
+                                  faculty: widget.faculty, list: infoList),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.person),
-                  title: const Text('Gérer le profil'),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => Profil(
-                          faculte: widget.faculty,
+                )
+              : null,
+          endDrawer: isIos
+              ? Drawer(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: <Widget>[
+                      DrawerHeader(
+                        decoration: const BoxDecoration(
+                          color: Colors.teal,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              widget.faculty.name,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 10),
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.memory(
+                                  widget.faculty.logo,
+                                  fit: BoxFit.cover,
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.2,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.3,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    );
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.school),
-                  title: const Text('Gérer les filières'),
-                  onTap: () async {
-                    // ignore: use_build_context_synchronously
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => OptionManagement(
-                            faculty: widget.faculty, list: optionList),
+                      ListTile(
+                        leading: const Icon(Icons.person),
+                        title: const Text('Gérer le profil'),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => Profil(
+                                faculte: widget.faculty,
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                    await fetchOption();
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.info),
-                  title: const Text('Gérer les informations'),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => InfoManagement(
-                            faculty: widget.faculty, list: infoList),
+                      ListTile(
+                        leading: const Icon(Icons.school),
+                        title: const Text('Gérer les filières'),
+                        onTap: () async {
+                          // ignore: use_build_context_synchronously
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => OptionManagement(
+                                  faculty: widget.faculty, list: optionList),
+                            ),
+                          );
+                          await fetchOption();
+                        },
                       ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
+                      ListTile(
+                        leading: const Icon(Icons.info),
+                        title: const Text('Gérer les informations'),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => InfoManagement(
+                                  faculty: widget.faculty, list: infoList),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                )
+              : null,
           body: HomePageBody(faculte: widget.faculty),
         ),
         onWillPop: () async {

@@ -51,7 +51,7 @@ class _OptionManagementState extends State<OptionManagement> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Gestions des filieres"),
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: Platform.isIOS,
         actions: [
           //dechargement et rechargement des options dans sqflite
           TextButton(

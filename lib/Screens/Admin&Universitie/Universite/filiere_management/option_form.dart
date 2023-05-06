@@ -58,12 +58,12 @@ class _ExpenseFormState extends State<OptionForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
+    return Container(
+      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+      child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics()),
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.9,
           padding: const EdgeInsets.all(5.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -72,6 +72,7 @@ class _ExpenseFormState extends State<OptionForm> {
                 "Ajouter une option",
                 color: Colors.blue,
                 factor: 2.0,
+                fontStyle: FontStyle.normal,
               ),
               const SizedBox(
                 height: 20,
@@ -89,7 +90,7 @@ class _ExpenseFormState extends State<OptionForm> {
                         borderRadius: BorderRadius.circular(15),
                         child: (image == null)
                             ? Image.asset(
-                                "assets/images/Noimage.png",
+                                "assets/images/Noimage-1.png",
                                 fit: BoxFit.cover,
                               )
                             : Image.file(

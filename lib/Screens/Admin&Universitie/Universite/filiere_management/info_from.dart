@@ -71,6 +71,7 @@ class _ExpenseFormState extends State<InfoForm> {
                 "Partager une information",
                 color: Colors.blue,
                 factor: 2.0,
+                fontStyle: FontStyle.normal,
               ),
               const SizedBox(
                 height: 10,
@@ -88,7 +89,7 @@ class _ExpenseFormState extends State<InfoForm> {
                         borderRadius: BorderRadius.circular(15),
                         child: (image == null)
                             ? Image.asset(
-                                "assets/images/Noimage.png",
+                                "assets/images/Noimage-1.png",
                                 fit: BoxFit.cover,
                               )
                             : Image.file(
